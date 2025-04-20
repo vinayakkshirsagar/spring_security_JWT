@@ -4,6 +4,7 @@ import java.net.http.HttpRequest;
 
 import javax.management.relation.Role;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,8 +31,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 
+	@Autowired
 	private JWTAuthenticationFilter jwtAuthenticationFilter;
 
+	@Autowired
 	private UserSevice userSevice;
 
 	@Bean
@@ -47,16 +50,16 @@ public class SecurityConfiguration {
 	}
 
 	@Bean
-	private AuthenticationProvider authenticationProvider() {
+	public AuthenticationProvider authenticationProvider() {
 		// TODO Auto-generated method stub
 		DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
 		authenticationProvider.setUserDetailsService(userSevice.userDetailsService());
 		authenticationProvider.setPasswordEncoder(passwordEncoader());
-		return null;
+		return authenticationProvider;
 	}
 
 	@Bean
-	private PasswordEncoder passwordEncoader() {
+	public PasswordEncoder passwordEncoader() {
 		return new BCryptPasswordEncoder();
 	}
 
