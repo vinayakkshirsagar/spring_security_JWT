@@ -2,11 +2,13 @@ package com.bsl.business.serviceImpl;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.Map;
 import java.util.function.Function;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import com.bsl.business.entities.User;
 import com.bsl.business.service.JWTService;
 
 import io.jsonwebtoken.Claims;
@@ -20,9 +22,17 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class JWTServiceImpl implements JWTService {
 
+	@Override
 	public String generateToken(UserDetails userDetails) {
 		return Jwts.builder().setSubject(userDetails.getUsername()).setIssuedAt(new Date(System.currentTimeMillis()))
 				.setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
+				.signWith(getSignKey(), SignatureAlgorithm.HS256).compact();
+	}
+	
+	@Override
+	public String generateRereshToken(Map<String,Object> extraClaims, User user) {
+		return Jwts.builder().setClaims(extraClaims).setSubject(user.getUsername()).setIssuedAt(new Date(System.currentTimeMillis()))
+				.setExpiration(new Date(System.currentTimeMillis() + 604800000))
 				.signWith(getSignKey(), SignatureAlgorithm.HS256).compact();
 	}
 
@@ -52,4 +62,6 @@ public class JWTServiceImpl implements JWTService {
 	private boolean isTokenExpired(String token) {
 		return extractClaim(token, Claims::getExpiration).before(new Date());
 	}
+
+	
 }

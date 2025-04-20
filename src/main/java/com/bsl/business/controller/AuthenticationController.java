@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bsl.business.dto.JwtAuthenticationResponse;
+import com.bsl.business.dto.SignInRequest;
 import com.bsl.business.dto.SignUpRequest;
 import com.bsl.business.entities.User;
 import com.bsl.business.service.AuthenticationService;
@@ -24,5 +26,10 @@ public class AuthenticationController {
 	@PostMapping("/signup")
 	public ResponseEntity<User> signup(@RequestBody SignUpRequest signUpRequest){
 		return ResponseEntity.ok(authenticationService.signup(signUpRequest));
+	}
+	
+	@PostMapping("/signin")
+	public ResponseEntity<JwtAuthenticationResponse> signin(@RequestBody SignInRequest signInRequest){
+		return ResponseEntity.ok(authenticationService.signin(signInRequest));
 	}
 }
