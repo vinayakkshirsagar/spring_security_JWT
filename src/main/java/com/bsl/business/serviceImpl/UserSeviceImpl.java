@@ -17,12 +17,12 @@ public class UserSeviceImpl implements UserSevice {
 	public UserRepository userRepository;
 
 	@Override
-	public UserDetailsService userDetailsService(String userName) {
+	public UserDetailsService userDetailsService() {
 		return new UserDetailsService() {
 
 			@Override
 			public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-				return userRepository.findByEmail(userName)
+				return userRepository.findByEmail(username)
 						.orElseThrow(() -> new UsernameNotFoundException("User Not ound"));
 			}
 		};
